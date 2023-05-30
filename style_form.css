@@ -22,12 +22,6 @@ h1,h2 {
     text-align: center;
     margin: 5px;
 }
-.error{
-    color: rgb(206, 21, 21);
-    font-weight: 900;
-    text-decoration-line: underline;
-    font-size: larger;
-}
 .submit{
     background-color: darkcyan;
     padding: 10px 30px;
