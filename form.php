@@ -94,7 +94,7 @@ if(!empty($_COOKIE[session_name()])&&session_start()&&!empty($_SESSION['login'])
     $values['super']=[];
     $super_value=unserialize($_COOKIE['super_value']);
     foreach($super_value as $s){
-      if(!empty($super)[$s]){
+      if(!empty($super[$s])){
         $values['super'][$s]=$s;
       }
     }
