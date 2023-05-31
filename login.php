@@ -8,8 +8,7 @@ $db_pass = '8295850';
 // В суперглобальном массиве $_SERVER PHP сохраняет некторые заголовки запроса HTTP
 // и другие сведения о клиненте и сервере, например метод текущего запроса $_SERVER['REQUEST_METHOD'].
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if(isset($_GET['do'])&&$_GET['do'] == 'logout'){
-    session_start();    
+    if(isset($_GET['do'])&&$_GET['do'] == 'logout'){   
     session_unset();
     session_destroy();
     setcookie ("PHPSESSID", "", 100, '/');
