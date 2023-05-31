@@ -54,5 +54,5 @@ else {
     echo 'Ошибка: ' . $e->getMessage();
     exit();
   }
-  header('Location: ./');
+  header('Location: ./form.php');
 }
