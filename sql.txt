@@ -24,6 +24,7 @@ CREATE TABLE ability5(
 INSERT INTO superpower (superpower) VALUES
     ('deathless'),('walls'),('levitation'),
     ('elements'),('time travel');
+
 CREATE TABLE user(
 	id INT(10) unsigned NOT NULL AUTO_INCREMENT,
 	login VARCHAR(128) NOT NULL,

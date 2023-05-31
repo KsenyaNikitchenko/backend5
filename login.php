@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         <label for="login">Логин:</label><br>
         <input name="login"><br>
         <label for="password">Пароль:</label><br>
-        <input name="password"><br>
+        <input type="password" name="password"><br>
         <input type="submit" class="submit" value="Войти" />
     </form>
     </div>
