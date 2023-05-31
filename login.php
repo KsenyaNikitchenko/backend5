@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     session_start();    
     session_unset();
     session_destroy();
-    setcookie ("PHPSESSID", "", time() - 3600, '/');
+    setcookie ("PHPSESSID", "", 100, '/');
     header("Location: form.php");
     exit;}
 ?>
