@@ -4,7 +4,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $messages = array();
   if (!empty($_COOKIE['save'])) {
     setcookie('save', '', 100);
+    setcookie('login','',100);
+    setcookie('password','',100);
     $messages[] = 'Спасибо, результаты сохранены.';
+    if(!empty($_COOKIE['password'])){
+      $messages[] = sprintf('Вы можете <a href="login.php">войти</a> с логином <strong>%s</strong>
+        и паролем <strong>%s</strong> для изменения данных.',
+        strip_tags($_COOKIE['login']),
+        strip_tags($_COOKIE['password']));
+    }
   }
   $errors = array();
   $errors['name'] = !empty($_COOKIE['name_error']);
@@ -83,7 +91,6 @@ else {
     $errors = TRUE;
   }
   else {
-    // Сохраняем ранее введенное в форму значение на месяц.
     setcookie('name_value', $_POST['name'], time() + 30 * 24 * 60 * 60);
   }
   if (empty($_POST['email'])) {
@@ -95,7 +102,6 @@ else {
     $errors = TRUE;
   }
   else {
-    // Сохраняем ранее введенное в форму значение на месяц.
     setcookie('email_value', $_POST['email'], time() + 30 * 24 * 60 * 60);
   }
   if (empty($_POST['year'])) {
@@ -103,7 +109,6 @@ else {
     $errors = TRUE;
   }
   else {
-    // Сохраняем ранее введенное в форму значение на месяц.
     setcookie('year_value', $_POST['year'], time() + 30 * 24 * 60 * 60);
   }
   if (empty($_POST['gender'])) {
@@ -111,7 +116,6 @@ else {
     $errors = TRUE;
   }
   else {
-    // Сохраняем ранее введенное в форму значение на месяц.
     setcookie('gender_value', $_POST['gender'], time() + 30 * 24 * 60 * 60);
   }
   if (empty($_POST['limbs'])) {
@@ -119,7 +123,6 @@ else {
     $errors = TRUE;
   }
   else {
-    // Сохраняем ранее введенное в форму значение на месяц.
     setcookie('limbs_value', $_POST['limbs'], time() + 30 * 24 * 60 * 60);
   }
   if (empty($_POST['biography'])) {
@@ -127,7 +130,6 @@ else {
     $errors = TRUE;
   }
   else {
-    // Сохраняем ранее введенное в форму значение на месяц.
     setcookie('biography_value', $_POST['biography'], time() + 30 * 24 * 60 * 60);
   }
   if(empty($_POST['super'])){
@@ -156,7 +158,24 @@ else {
     setcookie('superpower_error', '', 100000);
     setcookie('fio_error', '', 100000);
   }
-  // Сохранение в базу данных.
+  // Проверяем меняются ли ранее сохраненные данные или отправляются новые.
+  if (!empty($_COOKIE[session_name()]) &&
+      session_start() && !empty($_SESSION['login'])) {
+    // TODO: перезаписать данные в БД новыми данными,
+    // кроме логина и пароля.
+  }
+  else {
+    // Генерируем уникальный логин и пароль.
+    // TODO: сделать механизм генерации, например функциями rand(), uniquid(), md5(), substr().
+    $login = '123';
+    $pass = '123';
+    // Сохраняем в Cookies.
+    setcookie('login', $login);
+    setcookie('pass', $pass);
+
+    // TODO: Сохранение данных формы, логина и хеш md5() пароля в базу данных.
+    // ...
+  }
 $user = 'u52984';
 $pass = '8295850';
 $db = new PDO('mysql:host=localhost;dbname=u52984', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
