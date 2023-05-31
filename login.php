@@ -31,16 +31,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     font-style: normal;
     text-align: center;
     align-items: center;
+    text-shadow: 1px 1px 2px grey;
     width: 60%;
     height: 80%;
     box-shadow: 10px 5px 5px 0px rgba(0, 0, 0, 0.5);
     margin-top: 6%;
     border-radius: 10px;
 }
+.submit{
+    background-color: darkcyan;
+    padding: 10px 30px;
+    font-size: 25px;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+}
 </style>
 <form action="" method="post">
-  <p><label for="login">Логин </label><input name="login"></p>
-  <p><label for="password">Пароль </label><input name="password"></p>
+  <label for="login">Логин:</label><br>
+  <input name="login"><br>
+  <label for="password">Пароль:</label><br>
+  <input name="password"><br>
   <input type="submit" value="Войти" />
 </form>
 
