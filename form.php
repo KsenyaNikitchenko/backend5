@@ -204,7 +204,6 @@ else {
       ));
       $sth=$db->prepare("DELETE FROM ability5 WHERE id_user=?");
       $sth->execute(array($user_id));
-      $stmt=$db->prepare("INSERT INTO ability5 SET id_user=?, id_superpower=?");
       $stmt = $db->prepare("SELECT id_power FROM superpower WHERE superpower = ?");
     foreach ($_POST['superpowers'] as $value) {
         $stmt->execute([$value]);
@@ -241,7 +240,7 @@ else {
       $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['biography']]);
       $last_index=$db->lastInsertId();
       $stmt = $db->prepare("SELECT id_power FROM superpower WHERE superpower = ?");
-      foreach ($_POST['superpowers'] as $value) {
+      foreach ($_POST['super'] as $value) {
           $stmt->execute([$value]);
           $id_power=$stmt->fetchColumn();
           $stmt1 = $db->prepare("INSERT INTO ability5 (id_user, id_superpower) VALUES (?, ?)");
