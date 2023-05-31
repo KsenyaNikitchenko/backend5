@@ -16,46 +16,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     header("Location: form.php");
     exit;}
 ?>
-<style>
-    body{
-    margin: 0;
-    background-color: rgb(203, 227, 227);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Fasthand';
-}
-.form{
-    background-color: rgb(138, 207, 207);
-    font-weight: 400;
-    font-style: normal;
-    text-align: center;
-    align-items: center;
-    text-shadow: 1px 1px 2px grey;
-    width: 60%;
-    height: 80%;
-    box-shadow: 10px 5px 5px 0px rgba(0, 0, 0, 0.5);
-    margin-top: 6%;
-    border-radius: 10px;
-}
-.submit{
-    background-color: darkcyan;
-    padding: 10px 30px;
-    font-size: 25px;
-    border: none;
-    border-radius: 10px;
-    text-decoration: none;
-    color: white;
-}
-</style>
-<form action="" method="post">
-  <label for="login">Логин:</label><br>
-  <input name="login"><br>
-  <label for="password">Пароль:</label><br>
-  <input name="password"><br>
-  <input type="submit" value="Войти" />
-</form>
+<!DOCTYPE html>
+<html lang="ru">
 
+<head>
+    <meta charset="utf-8">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="style_form.css">
+    </style>
+</head>
+
+<body>
+    <form action="" method="post">
+        <label for="login">Логин:</label><br>
+        <input name="login"><br>
+        <label for="password">Пароль:</label><br>
+        <input name="password"><br>
+        <input type="submit" value="Войти" />
+    </form>
+</body>
 <?php
 }
 // Иначе, если запрос был методом POST, т.е. нужно сделать авторизацию с записью логина в сессию.
