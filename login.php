@@ -13,10 +13,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     session_unset();
     session_destroy();
     setcookie ("PHPSESSID", "", time() - 3600, '/');
-    header("Location: index.php");
+    header("Location: form.php");
     exit;}
 ?>
-
+<style>
+    body{
+    margin: 0;
+    background-color: rgb(203, 227, 227);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Fasthand';
+}
+.form{
+    background-color: rgb(138, 207, 207);
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    align-items: center;
+    width: 60%;
+    height: 80%;
+    box-shadow: 10px 5px 5px 0px rgba(0, 0, 0, 0.5);
+    margin-top: 6%;
+    border-radius: 10px;
+}
+</style>
 <form action="" method="post">
   <p><label for="login">Логин </label><input name="login"></p>
   <p><label for="password">Пароль </label><input name="password"></p>
