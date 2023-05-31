@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('save', '', 100);
     setcookie('login','',100);
     setcookie('password','',100);
-    $messages[] = 'Спасибо, результаты сохранены.';
+    $messages[] = 'Спасибо, результаты сохранены.<br>';
     if(!empty($_COOKIE['password'])){
       $messages[] = sprintf('Вы можете <a href="login.php">войти</a> с логином <strong>%s</strong>
         и паролем <strong>%s</strong> для изменения данных.',
