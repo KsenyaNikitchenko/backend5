@@ -16,11 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $errors['biography'] = !empty($_COOKIE['biography_error']);
   if ($errors['name']) {
     setcookie('name_error', '', 100);
-    $messages[] = '<div class="error_m">Заполните имя.</div>';
+    $messages[] = '<div class="error_m">Заполните имя. Данное поле может содержать
+     символы русского и английского алфавитов.</div>';
   }
   if ($errors['email']) {
     setcookie('email_error', '', 100);
-    $messages[] = '<div class="error_m">Заполните email.</div>';
+    $messages[] = '<div class="error_m">Заполните email. Поле должно содержать только символы 
+    английского алфавита и знак @ (почта должна иметь домен .ru)</div>';
   }
   if ($errors['year']) {
     setcookie('year_error', '', 100);
@@ -76,7 +78,7 @@ else {
     setcookie('name_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   }
-  else if(!preg_match("/^[а-яё]|[a-z]$/iu", $_POST['name'])){
+  else if(!preg_match("/[a-zA-Zа-яёА-ЯЁ]/", $_POST['name'])){
     setcookie('name_error', $_POST['name'], time() + 24 * 60 * 60);
     $errors = TRUE;
   }
@@ -88,7 +90,7 @@ else {
     setcookie('email_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   }
-  else if(!preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+.[a-zA-Z.]{2,5}$/", $_POST['email'])){
+  else if(!preg_match("/.*@.*\.ru$/", $_POST['email'])){
     setcookie('email_error', $_POST['email'], time() + 24 * 60 * 60);
     $errors = TRUE;
   }
@@ -160,14 +162,14 @@ $pass = '8295850';
 $db = new PDO('mysql:host=localhost;dbname=u52984', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 // Подготовленный запрос. Не именованные метки.
 try {
-    $stmt = $db->prepare("INSERT INTO person (name, email, year, gender, limbs, biography) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO person5 (name, email, year, gender, limbs, biography) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['biography']]);
     $last_index=$db->lastInsertId();
     $stmt = $db->prepare("SELECT id_power FROM superpower WHERE superpower = ?");
     foreach ($_POST['superpowers'] as $value) {
         $stmt->execute([$value]);
         $id_power=$stmt->fetchColumn();
-        $stmt1 = $db->prepare("INSERT INTO ability (id_user, id_superpower) VALUES (?, ?)");
+        $stmt1 = $db->prepare("INSERT INTO ability5 (id_user, id_superpower) VALUES (?, ?)");
         $stmt1 -> execute([$last_index, $id_power]);
     }
     unset($value);
