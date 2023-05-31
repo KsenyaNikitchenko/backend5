@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <head>
     <meta charset="utf-8">
     <title>Авторизация</title>
-    <link rel="stylesheet" href="style_form.css">
+    <link rel="stylesheet" href="style_login.css">
     </style>
 </head>
 
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         <input name="login"><br>
         <label for="password">Пароль:</label><br>
         <input name="password"><br>
-        <input type="submit" value="Войти" />
+        <input type="submit" class="submit" value="Войти" />
     </form>
     </div>
 </body>
