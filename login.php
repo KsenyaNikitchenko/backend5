@@ -57,6 +57,7 @@ else {
     // Сравнием текущий хэш пароля с тем, что достали из базы.
     if (password_verify($password, $user['password'])) {
       $_SESSION['login'] = $login;
+      $_SESSION['password']=$password;
     }
     else {
       echo "Неправильный логин или пароль";
