@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 else {
 
   $login = $_POST['login'];
-  $pass =  $_POST['pass'];
+  $password =  $_POST['password'];
 
   $db = new PDO('mysql:host=localhost;dbname=u52984', $db_user, $db_pass, array(
     PDO::ATTR_PERSISTENT => true
@@ -41,7 +41,7 @@ else {
     // Получаем данные в виде массива из БД.
     $user = $stmt->fetch();
     // Сравнием текущий хэш пароля с тем, что достали из базы.
-    if (password_verify($pass, $user['password'])) {
+    if (password_verify($password, $user['password'])) {
       $_SESSION['login'] = $login;
     }
     else {
