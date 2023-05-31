@@ -87,7 +87,7 @@ if(!empty($_COOKIE[session_name()])&&session_start()&&!empty($_SESSION['login'])
     $user_id=($sth->fetchAll(PDO::FETCH_COLUMN,0))['0'];
     $sth=$db->prepare("SELECT * FROM person5 WHERE id_person = ?");
     $sth->execute(array($user_id));
-    $user_data=($sth->fetchAll(PDO::FETCH_ASSOC))['0'];
+    $user_data=($sth->fetchAll(PDO::FETCH_ASSOC));
     foreach($user_data as $key=>$val){
       $values[$key]=$val;
     }
