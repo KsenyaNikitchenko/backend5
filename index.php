@@ -69,6 +69,7 @@ if (!empty($messages)) {
             <input type="submit" class="submit" value="Отправить" />
 
         </form>
+        <?php if(!empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) print( '<div id="footer">Вход с логином ' . $_SESSION["login"]. '<br> <a href=login.php?do=logout> Выход</a><br></div>');?>
     </div>
 
 </body>

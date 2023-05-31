@@ -1,5 +1,8 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
+$user = 'u52984';
+$pass = '8295850';
+$db = new PDO('mysql:host=localhost;dbname=u52984', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $messages = array();
   if (!empty($_COOKIE['save'])) {
@@ -77,6 +80,30 @@ if(!empty($_COOKIE['super_value'])){
     }
   }
 }
+if(!empty($_COOKIE[session_name()])&&session_start()&&!empty($_SESSION['login'])){
+  try{
+    $sth=$db->prepare("SELECT id FROM user WHERE login = ?");
+    $sth->execute(array($_SESSION['login']));
+    $user_id=($sth->fetchAll(PDO::FETCH_COLUMN,0))['0'];
+    $sth=$db->prepare("SELECT * FROM person5 WHERE id_person = ?");
+    $sth->execute(array($user_id));
+    $user_data=($sth->fetchAll(PDO::FETCH_ASSOC))['0'];
+    foreach($user_data as $key=>$val){
+      $values[$key]=$val;
+    }
+    $values['super']=[];
+    $super_value=unserialize($_COOKIE['super_value']);
+    foreach($super_value as $s){
+      if(!empty($super)[$s]){
+        $values['super'][$s]=$s;
+      }
+    }
+  }
+  catch(PDOException $e){
+    print($e->getMessage());
+    exit();
+  }
+}
   include('index.php');
 }
 else {
@@ -132,6 +159,7 @@ else {
   else {
     setcookie('biography_value', $_POST['biography'], time() + 30 * 24 * 60 * 60);
   }
+  $super=array();
   if(empty($_POST['super'])){
     setcookie('super_error','1',time()+24*60*60);
     $errors=TRUE;
@@ -159,32 +187,25 @@ else {
     setcookie('fio_error', '', 100000);
   }
   // Проверяем меняются ли ранее сохраненные данные или отправляются новые.
-  if (!empty($_COOKIE[session_name()]) &&
-      session_start() && !empty($_SESSION['login'])) {
-    // TODO: перезаписать данные в БД новыми данными,
-    // кроме логина и пароля.
-  }
-  else {
-    // Генерируем уникальный логин и пароль.
-    // TODO: сделать механизм генерации, например функциями rand(), uniquid(), md5(), substr().
-    $login = '123';
-    $pass = '123';
-    // Сохраняем в Cookies.
-    setcookie('login', $login);
-    setcookie('pass', $pass);
-
-    // TODO: Сохранение данных формы, логина и хеш md5() пароля в базу данных.
-    // ...
-  }
-$user = 'u52984';
-$pass = '8295850';
-$db = new PDO('mysql:host=localhost;dbname=u52984', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
-// Подготовленный запрос. Не именованные метки.
-try {
-    $stmt = $db->prepare("INSERT INTO person5 (name, email, year, gender, limbs, biography) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['biography']]);
-    $last_index=$db->lastInsertId();
-    $stmt = $db->prepare("SELECT id_power FROM superpower WHERE superpower = ?");
+  if (!empty($_COOKIE[session_name()]) && session_start() && !empty($_SESSION['login'])) {
+    try{
+      $stmt=$db->prepare("SELECT id FROM user WHERE login =?");
+      $stmt->execute(array($_SESSION['login']));
+      $user_id=($stmt->fetchAll(PDO::FETCH_COLUMN))['0'];
+      $stmt=$db->prepare("UPDATE person5 SET name=?, email=?, year=?, gender=?, limbs=?, biography=?  WHERE id=?");
+      $stmt->execute(array(
+        $_POST['name'],
+        $_POST['email'],
+        $_POST['year'],
+        $_POST['gender'],
+        $_POST['limbs'],
+        $_POST['biography'],
+        $user_id,
+      ));
+      $sth=$db->prepare("DELETE FROM ability5 WHERE id_user=?");
+      $sth->execute(array($user_id));
+      $stmt=$db->prepare("INSERT INTO ability5 SET id_user=?, id_superpower=?");
+      $stmt = $db->prepare("SELECT id_power FROM superpower WHERE superpower = ?");
     foreach ($_POST['superpowers'] as $value) {
         $stmt->execute([$value]);
         $id_power=$stmt->fetchColumn();
@@ -192,11 +213,52 @@ try {
         $stmt1 -> execute([$last_index, $id_power]);
     }
     unset($value);
-}
-catch(PDOException $e){
-print('Error: ' . $e->getMessage());
-exit();
-}
+    }
+    catch(PDOException $e){
+      print("Error: ".$e->getMessage());
+      exit();
+    }
+  }
+  else {
+    $sth=$db->prepare("SELECT login From user");
+    $sth->execute();
+    $login_array=$sth->fetchAll(PDO::FETCH_COLUMN);
+    $flag=true;
+    do{
+      $login=rand(1,1000);
+      $password=rand(1,1000);
+      foreach($login_array as $key=>$value){
+        if($value==$login){
+          $flag=false;
+        }
+      }
+    }while($flag==false);
+    $hash=password_hash((string)$password, PASSWORD_BCRYPT);
+    setcookie('login',$login);
+    setcookie('password',$password);
+    try {
+      $stmt = $db->prepare("INSERT INTO person5 (name, email, year, gender, limbs, biography) VALUES (?, ?, ?, ?, ?, ?)");
+      $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['biography']]);
+      $last_index=$db->lastInsertId();
+      $stmt = $db->prepare("SELECT id_power FROM superpower WHERE superpower = ?");
+      foreach ($_POST['superpowers'] as $value) {
+          $stmt->execute([$value]);
+          $id_power=$stmt->fetchColumn();
+          $stmt1 = $db->prepare("INSERT INTO ability5 (id_user, id_superpower) VALUES (?, ?)");
+          $stmt1 -> execute([$last_index, $id_power]);
+      }
+      unset($value);
+      $stmt=$db->prepare("INSERT INTO user SET login=?, password=?");
+      $stmt->execute(array(
+        $login,
+        $hash,
+      ));
+  }
+  catch(PDOException $e){
+  print('Error: ' . $e->getMessage());
+  exit();
+  }
+  }
 setcookie('save','1');
 header('Location: ?save=1');
 }
